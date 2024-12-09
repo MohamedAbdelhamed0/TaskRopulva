@@ -1,0 +1,31 @@
+name: task_ropulva_todo_app
+description: "Technical Assessment"
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.5.4
+
+dependencies:
+  flutter:
+    sdk: flutter
+  # Provides iOS-style icons for Flutter apps
+  cupertino_icons: ^1.0.8
+  # Allows using Google Fonts in Flutter apps
+  google_fonts: ^6.2.1
+  # Persistent storage for simple data
+  shared_preferences: ^2.3.3
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  # Provides recommended set of lints for Flutter apps
+  flutter_lints: ^4.0.0
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/svgs/
+    - assets/lotties/
+    - assets/images/
