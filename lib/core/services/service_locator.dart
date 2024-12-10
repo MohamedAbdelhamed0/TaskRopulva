@@ -1,14 +1,28 @@
+import 'package:get_it/get_it.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../../app/data/data_sources/local_data_source.dart';
+import '../../app/data/data_sources/remote_data_source.dart';
+import '../services/connectivity_helper.dart';
+import '../services/cache_helper.dart';
 
+final getIt = GetIt.instance;
 
-// final getIt = GetIt.instance;
+Future<void> setupServiceLocator() async {
+  // Services
+  final prefs = await SharedPreferences.getInstance();
+  getIt.registerSingleton<CacheHelper>(CacheHelper(prefs));
 
-// class ServiceLocator{
+  // Data sources
+  getIt.registerLazySingleton<RemoteDataSource>(() => RemoteDataSource());
+  getIt.registerLazySingleton<LocalDataSource>(() => LocalDataSource());
 
-//   static void initApp(){
-//     getIt.registerLazySingleton<RemoteDataSource>(() => RemoteDataSource());
-//     getIt.registerLazySingleton<LocalDataSource>(() => LocalDataSource());
-//     getIt.registerLazySingleton<TaskRepository>(() => TaskRepository(getIt(),getIt()));
-//     getIt.registerLazySingleton<TasksBloc>(() => TasksBloc(getIt()));
-//   }
+  // Connectivity
+  getIt.registerLazySingleton<ConnectivityHelper>(() {
+    final helper = ConnectivityHelper();
+    helper.initialize();
+    return helper;
+  });
 
-// }
+  // Initialize required services
+  await LocalDataSource.init();
+}

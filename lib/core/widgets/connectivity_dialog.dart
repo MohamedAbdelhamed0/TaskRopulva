@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import '../../core/services/service_locator.dart';
 
 import '../services/connectivity_helper.dart';
 
 class ConnectivityDialog {
   static bool _isDialogShowing = false;
   static bool get isDialogShowing => _isDialogShowing;
+  static final _connectivityHelper = getIt<ConnectivityHelper>();
 
   static void showNoInternetDialog(BuildContext context) {
     _showDialog(
@@ -49,8 +51,8 @@ class ConnectivityDialog {
             ),
             child: FadeTransition(
               opacity: animation,
-              child: WillPopScope(
-                onWillPop: () async => !isOffline,
+              child: PopScope(
+                canPop: !isOffline,
                 child: AlertDialog(
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(15),
@@ -104,7 +106,7 @@ class ConnectivityDialog {
                                     const EdgeInsets.symmetric(vertical: 12),
                               ),
                               onPressed: () async {
-                                final hasConnection = await ConnectivityHelper
+                                final hasConnection = await _connectivityHelper
                                     .hasInternetConnection();
                                 if (hasConnection && context.mounted) {
                                   _isDialogShowing = false;

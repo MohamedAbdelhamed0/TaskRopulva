@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import '../../core/services/service_locator.dart';
 import '../services/connectivity_helper.dart';
 import 'connectivity_dialog.dart';
 
@@ -8,15 +9,16 @@ class ConnectivityWrapper extends StatefulWidget {
   final Widget child;
 
   const ConnectivityWrapper({
-    Key? key,
+    super.key,
     required this.child,
-  }) : super(key: key);
+  });
 
   @override
   State<ConnectivityWrapper> createState() => _ConnectivityWrapperState();
 }
 
 class _ConnectivityWrapperState extends State<ConnectivityWrapper> {
+  final _connectivityHelper = getIt<ConnectivityHelper>();
   bool _wasConnected = true;
   StreamSubscription? _subscription;
 
@@ -24,13 +26,13 @@ class _ConnectivityWrapperState extends State<ConnectivityWrapper> {
   void initState() {
     super.initState();
     // Initialize connectivity
-    ConnectivityHelper.initialize();
+    _connectivityHelper.initialize();
     // Check initial connection after build
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _checkConnection();
     });
     // Listen to changes
-    _subscription = ConnectivityHelper.onConnectivityChanged.listen((result) {
+    _subscription = _connectivityHelper.onConnectivityChanged.listen((result) {
       if (!mounted) return;
 
       final isConnected = result != ConnectivityResult.none;
@@ -54,7 +56,7 @@ class _ConnectivityWrapperState extends State<ConnectivityWrapper> {
   }
 
   Future<void> _checkConnection() async {
-    final hasConnection = await ConnectivityHelper.hasInternetConnection();
+    final hasConnection = await _connectivityHelper.hasInternetConnection();
     _wasConnected = hasConnection;
     if (!hasConnection && mounted) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -65,6 +67,11 @@ class _ConnectivityWrapperState extends State<ConnectivityWrapper> {
 
   @override
   Widget build(BuildContext context) {
-    return widget.child;
+    return StreamBuilder<ConnectivityResult>(
+      stream: _connectivityHelper.onConnectivityChanged,
+      builder: (context, snapshot) {
+        return widget.child;
+      },
+    );
   }
 }

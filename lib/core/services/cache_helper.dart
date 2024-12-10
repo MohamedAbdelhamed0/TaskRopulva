@@ -1,50 +1,20 @@
-
-
-
 import 'package:shared_preferences/shared_preferences.dart';
 
+class CacheHelper {
+  static const String _userIdKey = 'userId';
+  final SharedPreferences prefs;
 
-class CacheHelper{
-  CacheHelper._internal();
+  CacheHelper(this.prefs);
 
-  static  final CacheHelper _instance = CacheHelper._internal();
-
-  factory CacheHelper() => _instance;
-
-  static late SharedPreferences  _sharedPreferences;
-  static Future<void> init()async {
-    _sharedPreferences=await SharedPreferences.getInstance();
+  Future<void> saveUserId(String userId) async {
+    await prefs.setString(_userIdKey, userId);
   }
 
-
-  static dynamic getData({
-    required String key,
-  }){
-    return _sharedPreferences.get(key);
+  String? getUserId() {
+    return prefs.getString(_userIdKey);
   }
 
-  static  Future<bool> saveData({
-    required String key,
-    required dynamic value,
-  })async {
-    if(value is String) return await _sharedPreferences.setString(key, value);
-    if(value is bool) return await _sharedPreferences.setBool(key, value);
-    if(value is int) return await _sharedPreferences.setInt(key, value);
-    if(value is double) return await _sharedPreferences.setDouble(key, value);
-    return await _sharedPreferences.setStringList(key, value);
-
+  Future<void> clearUser() async {
+    await prefs.remove(_userIdKey);
   }
-
-  static Future<bool> removeData({
-    required String key,
-  })async{
-    return await _sharedPreferences.remove(key);
-  }
-
-  static Future<bool> clear()async{
-    return await _sharedPreferences.clear();
-  }
-
 }
-
-

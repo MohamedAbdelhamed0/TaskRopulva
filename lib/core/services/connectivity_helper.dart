@@ -2,13 +2,13 @@ import 'dart:async';
 import 'package:connectivity_plus/connectivity_plus.dart';
 
 class ConnectivityHelper {
-  static final Connectivity _connectivity = Connectivity();
-  static StreamController<ConnectivityResult> _controller =
+  final Connectivity _connectivity = Connectivity();
+  final StreamController<ConnectivityResult> _controller =
       StreamController<ConnectivityResult>.broadcast();
-  static Timer? _timer;
-  static ConnectivityResult _lastResult = ConnectivityResult.none;
+  Timer? _timer;
+  ConnectivityResult _lastResult = ConnectivityResult.none;
 
-  static void initialize() {
+  void initialize() {
     // Listen to platform connectivity changes
     _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
 
@@ -23,7 +23,7 @@ class ConnectivityHelper {
     _connectivity.checkConnectivity().then(_updateConnectionStatus);
   }
 
-  static void _updateConnectionStatus(List<ConnectivityResult> results) {
+  void _updateConnectionStatus(List<ConnectivityResult> results) {
     final result = results.isNotEmpty ? results.first : ConnectivityResult.none;
     if (_lastResult != result) {
       _lastResult = result;
@@ -33,27 +33,21 @@ class ConnectivityHelper {
     }
   }
 
-  static void dispose() {
+  void dispose() {
     _timer?.cancel();
     _controller.close();
-    _controller = StreamController<ConnectivityResult>.broadcast();
   }
 
-  /// Stream of connectivity changes
-  static Stream<ConnectivityResult> get onConnectivityChanged =>
-      _controller.stream;
+  Stream<ConnectivityResult> get onConnectivityChanged => _controller.stream;
 
-  /// Check if device has internet connection
-  static Future<bool> hasInternetConnection() async {
+  Future<bool> hasInternetConnection() async {
     final result = await _connectivity.checkConnectivity();
     return result != ConnectivityResult.none;
   }
 
-  /// Get current connection status
-  static ConnectivityResult get currentConnectionStatus => _lastResult;
+  ConnectivityResult get currentConnectionStatus => _lastResult;
 
-  /// Get current connection type
-  static Future<String> getConnectionType() async {
+  Future<String> getConnectionType() async {
     final connectivityResult = await _connectivity.checkConnectivity();
     switch (connectivityResult) {
       case ConnectivityResult.wifi:

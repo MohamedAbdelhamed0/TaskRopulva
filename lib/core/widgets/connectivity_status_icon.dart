@@ -2,6 +2,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 
 import '../services/connectivity_helper.dart';
+import '../../core/services/service_locator.dart';
 
 class ConnectivityStatusIcon extends StatefulWidget {
   final double size;
@@ -21,25 +22,26 @@ class ConnectivityStatusIcon extends StatefulWidget {
 
 class _ConnectivityStatusIconState extends State<ConnectivityStatusIcon> {
   bool isHovered = false;
+  final _connectivityHelper = getIt<ConnectivityHelper>();
 
   @override
   void initState() {
     super.initState();
     // Initialize connectivity monitoring
-    ConnectivityHelper.initialize();
+    _connectivityHelper.initialize();
   }
 
   @override
   void dispose() {
-    ConnectivityHelper.dispose();
+    _connectivityHelper.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<ConnectivityResult>(
-      stream: ConnectivityHelper.onConnectivityChanged,
-      initialData: ConnectivityHelper.currentConnectionStatus,
+      stream: _connectivityHelper.onConnectivityChanged,
+      initialData: _connectivityHelper.currentConnectionStatus,
       builder: (context, snapshot) {
         final connected = snapshot.data != ConnectivityResult.none;
 
