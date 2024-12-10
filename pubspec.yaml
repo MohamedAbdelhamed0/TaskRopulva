@@ -17,6 +17,7 @@ dependencies:
   shared_preferences: ^2.3.3
   window_manager: ^0.3.8  # Replace window_size with window_manager
   flutter_animate: ^4.5.2
+  connectivity_plus: ^6.1.0
 
 dev_dependencies:
   flutter_test:

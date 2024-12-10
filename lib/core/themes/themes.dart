@@ -21,6 +21,7 @@ class AppTheme {
         inputDecorationTheme: _buildInputDecorationTheme(colors),
         chipTheme: _buildChipTheme(colors),
         cardTheme: _buildCardTheme(colors),
+        filledButtonTheme: _buildFilledButtonTheme(colors),
       );
 
   static TextTheme _buildTextTheme(CustomColorScheme colors) => TextTheme(
@@ -146,4 +147,24 @@ class AppTheme {
           borderRadius: BorderRadius.circular(10.0),
         ),
       );
+
+  static _buildFilledButtonTheme(CustomColorScheme colors) {
+    return FilledButtonThemeData(
+      style: FilledButton.styleFrom(
+        foregroundColor: colors.onPrimary,
+        backgroundColor: colors.primary,
+        fixedSize: const Size(double.infinity, 53),
+        minimumSize: const Size(double.infinity, 53),
+        maximumSize: const Size(double.infinity, 53),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+        textStyle: GoogleFonts.inter(
+          fontSize: 15,
+          color: colors.onPrimary,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+    );
+  }
 }
