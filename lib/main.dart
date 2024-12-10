@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'core/themes/themes.dart';
-import 'test_screen.dart';
-import 'core/widgets/custom_window_frame.dart';
+
+import 'core/screens/splash_screen.dart'; // Add this import
 import 'core/services/window_helper.dart';
+import 'core/themes/themes.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -16,13 +16,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
-      home: WindowHelper.isDesktopPlatform
-          ? const CustomWindowFrame(
-              title: 'Todo App',
-              child: TestScreen(),
-            )
-          : const TestScreen(),
+      home: const SplashScreen(), // Change initial screen to SplashScreen
       builder: (context, child) {
         return MediaQuery(
           data: MediaQuery.of(context)
