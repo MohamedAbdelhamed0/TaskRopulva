@@ -25,13 +25,10 @@ class _ConnectivityWrapperState extends State<ConnectivityWrapper> {
   @override
   void initState() {
     super.initState();
-    // Initialize connectivity
     _connectivityHelper.initialize();
-    // Check initial connection after build
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _checkConnection();
     });
-    // Listen to changes
     _subscription = _connectivityHelper.onConnectivityChanged.listen((result) {
       if (!mounted) return;
 

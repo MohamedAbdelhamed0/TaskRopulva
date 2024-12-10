@@ -44,7 +44,6 @@ class _ConnectivityStatusIconState extends State<ConnectivityStatusIcon> {
       initialData: _connectivityHelper.currentConnectionStatus,
       builder: (context, snapshot) {
         final connected = snapshot.data != ConnectivityResult.none;
-
         return MouseRegion(
           onEnter: (_) => setState(() => isHovered = true),
           onExit: (_) => setState(() => isHovered = false),

@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:task_ropulva_todo_app/app/controllers/task_bloc.dart';
+import 'package:task_ropulva_todo_app/app/presentation/screens/task_list_screen.dart';
 
 import '../../test_screen.dart'; // Make sure to import TestScreen
 import '../services/window_helper.dart';
@@ -24,13 +27,13 @@ class _SplashScreenState extends State<SplashScreen> {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
           builder: (context) => WindowHelper.isDesktopPlatform
-              ? const CustomWindowFrame(
+              ? CustomWindowFrame(
                   title: 'Todo App',
                   child: ConnectivityWrapper(
-                      child:
-                          TestScreen()), // Changed from SplashScreen to TestScreen
+                    child: const TaskListScreen(),
+                  ),
                 )
-              : const TestScreen(), // Changed from SplashScreen to TestScreen
+              : const TaskListScreen(),
         ),
       );
     });

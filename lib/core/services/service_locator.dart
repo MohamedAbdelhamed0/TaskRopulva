@@ -1,6 +1,5 @@
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../../app/data/data_sources/local_data_source.dart';
 import '../../app/data/data_sources/remote_data_source.dart';
 import '../services/connectivity_helper.dart';
 import '../services/cache_helper.dart';
@@ -14,7 +13,6 @@ Future<void> setupServiceLocator() async {
 
   // Data sources
   getIt.registerLazySingleton<RemoteDataSource>(() => RemoteDataSource());
-  getIt.registerLazySingleton<LocalDataSource>(() => LocalDataSource());
 
   // Connectivity
   getIt.registerLazySingleton<ConnectivityHelper>(() {
@@ -24,5 +22,4 @@ Future<void> setupServiceLocator() async {
   });
 
   // Initialize required services
-  await LocalDataSource.init();
 }
