@@ -20,3 +20,8 @@ class DeleteTask extends TaskEvent {
 class LoadTasks extends TaskEvent {}
 
 class SyncTasks extends TaskEvent {}
+
+class ChangeFilter extends TaskEvent {
+  final TaskFilter filter;
+  ChangeFilter(this.filter);
+}

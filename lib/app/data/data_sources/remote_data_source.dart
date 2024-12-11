@@ -1,113 +1,133 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
-import '../models/task_model.dart';
-import '../../../core/services/service_locator.dart';
+
 import '../../../core/services/cache_helper.dart';
+import '../../../core/services/service_locator.dart';
+import '../models/task_model.dart';
 
+/// Handles all remote data operations for tasks and authentication.
 class RemoteDataSource {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  final _cacheHelper = getIt<CacheHelper>();
+  static const String _usersCollection = 'users';
+  static const String _tasksCollection = 'tasks';
 
-  // Add this getter
+  final FirebaseAuth _auth;
+  final FirebaseFirestore _firestore;
+  final CacheHelper _cacheHelper;
+
+  RemoteDataSource({
+    FirebaseAuth? auth,
+    FirebaseFirestore? firestore,
+    CacheHelper? cacheHelper,
+  })  : _auth = auth ?? FirebaseAuth.instance,
+        _firestore = firestore ?? FirebaseFirestore.instance,
+        _cacheHelper = cacheHelper ?? getIt<CacheHelper>();
+
   User? get currentUser => _auth.currentUser;
-
-  // Add this stream
   Stream<User?> get authStateChanges => _auth.authStateChanges();
 
+  /// Authenticates user anonymously, using cached credentials if available.
   Future<void> signInAnonymously() async {
     try {
-      // Check if we have a cached user
-      final cachedUserId = _cacheHelper.getUserId();
-      if (cachedUserId != null) {
-        // User exists in cache, no need to sign in again
-        return;
-      }
-
-      final userCredential = await _auth.signInAnonymously();
-      final user = userCredential.user;
-      if (user == null) {
-        throw Exception('Anonymous sign in failed: No user returned');
-      }
-
-      // Save the new user ID to cache
-      await _cacheHelper.saveUserId(user.uid);
+      if (await _isUserCached()) return;
+      await _performAnonymousSignIn();
     } on FirebaseAuthException catch (e) {
-      debugPrint('Firebase Auth Exception: ${e.message}');
-      throw Exception(
-          'Failed to sign in anonymously: [${e.code}] ${e.message}');
+      _handleAuthError(e);
     } catch (e) {
-      debugPrint('General Exception: $e');
-      throw Exception('Failed to sign in anonymously: $e');
+      throw Exception('Authentication failed: $e');
     }
   }
 
+  Future<bool> _isUserCached() async {
+    return _cacheHelper.getUserId() != null;
+  }
+
+  Future<void> _performAnonymousSignIn() async {
+    final userCredential = await _auth.signInAnonymously();
+    final user = userCredential.user;
+
+    if (user == null) {
+      throw Exception('Anonymous sign in failed: No user returned');
+    }
+    await _cacheHelper.saveUserId(user.uid);
+  }
+
+  void _handleAuthError(FirebaseAuthException e) {
+    debugPrint('Firebase Auth Exception: ${e.message}');
+    throw Exception('Authentication failed: [${e.code}] ${e.message}');
+  }
+
+  /// Signs out the current user and clears cached data.
   Future<void> signOut() async {
-    await _auth.signOut();
-    await _cacheHelper.clearUser();
+    await Future.wait([
+      _auth.signOut(),
+      _cacheHelper.clearUser(),
+    ]);
   }
 
+  /// CRUD Operations for Tasks
+
+  /// Adds a new task to Firestore.
   Future<void> addTask(TaskModel task) async {
-    try {
-      final user = _auth.currentUser;
-      if (user != null) {
-        await _firestore
-            .collection('users')
-            .doc(user.uid)
-            .collection('tasks')
-            .doc(task.id)
-            .set(task.toJson());
-      }
-    } catch (e) {
-      throw Exception('Failed to add task: $e');
-    }
+    await _executeTaskOperation(
+      operation: () =>
+          _getUserTasksCollection().doc(task.id).set(task.toJson()),
+      errorMessage: 'Failed to add task',
+    );
   }
 
+  /// Updates an existing task in Firestore.
   Future<void> updateTask(TaskModel task) async {
-    try {
-      final user = _auth.currentUser;
-      if (user != null) {
-        await _firestore
-            .collection('users')
-            .doc(user.uid)
-            .collection('tasks')
-            .doc(task.id)
-            .update(task.toJson());
-      }
-    } catch (e) {
-      throw Exception('Failed to update task: $e');
-    }
+    await _executeTaskOperation(
+      operation: () =>
+          _getUserTasksCollection().doc(task.id).update(task.toJson()),
+      errorMessage: 'Failed to update task',
+    );
   }
 
+  /// Deletes a task from Firestore.
   Future<void> deleteTask(String taskId) async {
-    try {
-      final user = _auth.currentUser;
-      if (user != null) {
-        await _firestore
-            .collection('users')
-            .doc(user.uid)
-            .collection('tasks')
-            .doc(taskId)
-            .delete();
-      }
-    } catch (e) {
-      throw Exception('Failed to delete task: $e');
-    }
+    await _executeTaskOperation(
+      operation: () => _getUserTasksCollection().doc(taskId).delete(),
+      errorMessage: 'Failed to delete task',
+    );
   }
 
+  /// Returns a stream of all tasks for the current user.
   Stream<List<TaskModel>> getAllTasks() {
-    final user = _auth.currentUser;
-    if (user != null) {
-      return _firestore
-          .collection('users')
-          .doc(user.uid)
-          .collection('tasks')
-          .snapshots()
-          .map((snapshot) => snapshot.docs
-              .map((doc) => TaskModel.fromJson(doc.data()))
-              .toList());
+    final user = currentUser;
+    if (user == null) return Stream.value([]);
+
+    return _getUserTasksCollection().snapshots().map(_convertToTaskList);
+  }
+
+  // Private helper methods
+
+  CollectionReference _getUserTasksCollection() {
+    final user = currentUser;
+    if (user == null) throw Exception('No authenticated user found');
+
+    return _firestore
+        .collection(_usersCollection)
+        .doc(user.uid)
+        .collection(_tasksCollection);
+  }
+
+  List<TaskModel> _convertToTaskList(QuerySnapshot snapshot) {
+    return snapshot.docs
+        .map((doc) => TaskModel.fromJson(doc.data() as Map<String, dynamic>))
+        .toList();
+  }
+
+  Future<void> _executeTaskOperation({
+    required Future<void> Function() operation,
+    required String errorMessage,
+  }) async {
+    try {
+      if (currentUser == null) throw Exception('No authenticated user found');
+      await operation();
+    } catch (e) {
+      throw Exception('$errorMessage: $e');
     }
-    return Stream.value([]);
   }
 }

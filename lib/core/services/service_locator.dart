@@ -1,6 +1,8 @@
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../app/data/data_sources/remote_data_source.dart';
+import '../../app/data/repos/task_repository.dart';
+import '../../app/data/repos/task_repository_impl.dart';
 import '../services/connectivity_helper.dart';
 import '../services/cache_helper.dart';
 
@@ -20,6 +22,11 @@ Future<void> setupServiceLocator() async {
     helper.initialize();
     return helper;
   });
+
+  // Register TaskRepository
+  getIt.registerLazySingleton<TaskRepository>(
+    () => TaskRepositoryImpl(getIt<RemoteDataSource>()),
+  );
 
   // Initialize required services
 }

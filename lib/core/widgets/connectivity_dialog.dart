@@ -41,6 +41,7 @@ class ConnectivityDialog {
       showGeneralDialog(
         context: context,
         barrierDismissible: !isOffline,
+        barrierLabel: 'Dismiss', // Add this line
         barrierColor: Colors.black54,
         transitionDuration: const Duration(milliseconds: 300),
         pageBuilder: (_, animation, __) => Container(),

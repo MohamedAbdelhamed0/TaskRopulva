@@ -27,10 +27,10 @@ class _SplashScreenState extends State<SplashScreen> {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
           builder: (context) => WindowHelper.isDesktopPlatform
-              ? CustomWindowFrame(
+              ? const CustomWindowFrame(
                   title: 'Todo App',
                   child: ConnectivityWrapper(
-                    child: const TaskListScreen(),
+                    child: TaskListScreen(),
                   ),
                 )
               : const TaskListScreen(),
@@ -42,7 +42,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: MyColors.green,
+      backgroundColor: MyColors.black,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
