@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../../core/widgets/connectivity_status_icon.dart';
 import '../../controllers/task_bloc.dart';
 import '../../data/models/task_model.dart';
-import '../../../core/widgets/connectivity_status_icon.dart';
 
 enum TaskFilter { all, active, completed }
 
@@ -18,6 +19,9 @@ class _TaskListScreenState extends State<TaskListScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        elevation: 0,
+        forceMaterialTransparency: false,
+        backgroundColor: Colors.white,
         title: const Text('Tasks'),
         actions: const [ConnectivityStatusIcon()],
       ),

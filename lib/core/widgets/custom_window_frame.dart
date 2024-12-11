@@ -23,7 +23,7 @@ class CustomWindowFrame extends StatelessWidget {
       children: [
         WindowCaption(
           brightness: Theme.of(context).brightness,
-          backgroundColor: backgroundColor ?? Theme.of(context).primaryColor,
+          backgroundColor: MyColors.white,
           title: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisSize: MainAxisSize.max,
