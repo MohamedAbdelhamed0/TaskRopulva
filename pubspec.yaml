@@ -29,7 +29,7 @@ dependencies:
   bloc: ^8.1.4
   hydrated_bloc: ^9.1.5
   flutter_bloc: ^8.1.6
-
+  package_info_plus: ^4.1.0  # or the latest version
 
 dev_dependencies:
   flutter_test:

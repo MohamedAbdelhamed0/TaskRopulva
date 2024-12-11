@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:task_ropulva_todo_app/app/presentation/screens/task_list_screen.dart';
+import '../services/version_helper.dart'; // Add this import
 
 import '../services/window_helper.dart';
 import '../themes/colors.dart';
@@ -123,9 +124,12 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  final VersionHelper _versionHelper = VersionHelper();
+
   @override
   void initState() {
     super.initState();
+    _initVersion();
     Future.delayed(const Duration(seconds: 4), () {
       Navigator.of(context).pushReplacement(
         PageRouteBuilder(
@@ -156,6 +160,11 @@ class _SplashScreenState extends State<SplashScreen> {
         ),
       );
     });
+  }
+
+  Future<void> _initVersion() async {
+    await _versionHelper.init();
+    if (mounted) setState(() {});
   }
 
   @override
@@ -225,6 +234,17 @@ class _SplashScreenState extends State<SplashScreen> {
                         duration: const Duration(seconds: 1),
                         color: Colors.white.withOpacity(0.5),
                       ),
+                  const SizedBox(height: 4),
+                  Text(
+                    _versionHelper.formattedVersion,
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: Colors.white.withOpacity(0.7),
+                          fontSize: 10,
+                        ),
+                  )
+                      .animate()
+                      .fadeIn(delay: const Duration(seconds: 3))
+                      .slideY(begin: 0.3, end: 0),
                   const SizedBox(height: 20),
                 ],
               ),
