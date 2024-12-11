@@ -22,6 +22,7 @@ class AppTheme {
         chipTheme: _buildChipTheme(colors),
         cardTheme: _buildCardTheme(colors),
         filledButtonTheme: _buildFilledButtonTheme(colors),
+        // textButtonTheme: _buildTextButtonTheme(colors),
       );
 
   static TextTheme _buildTextTheme(CustomColorScheme colors) => TextTheme(
@@ -167,4 +168,24 @@ class AppTheme {
       ),
     );
   }
+
+  // static _buildTextButtonTheme(CustomColorScheme colors) {
+  //   return TextButtonThemeData(
+  //     style: TextButton.styleFrom(
+  //       foregroundColor: colors.primary,
+  //       backgroundColor: colors.primary.withOpacity(.250),
+  //       fixedSize: const Size(double.infinity, 53),
+  //       minimumSize: const Size(double.infinity, 53),
+  //       maximumSize: const Size(double.infinity, 53),
+  //       shape: RoundedRectangleBorder(
+  //         borderRadius: BorderRadius.circular(10.0),
+  //       ),
+  //       textStyle: GoogleFonts.inter(
+  //         fontSize: 15,
+  //         color: colors.onPrimary,
+  //         fontWeight: FontWeight.bold,
+  //       ),
+  //     ),
+  //   );
+  // }
 }
