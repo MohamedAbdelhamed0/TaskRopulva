@@ -14,6 +14,9 @@ class TaskModel {
   bool needsSync;
   @HiveField(5)
   final bool isDone;
+  @HiveField(6) // Add this field annotation
+  final DateTime? createdAt;
+  final DateTime? startTime;
 
   TaskModel({
     required this.id,
@@ -22,6 +25,8 @@ class TaskModel {
     this.dueDate, // New parameter
     this.needsSync = false,
     this.isDone = false,
+    this.createdAt, // Add this
+    this.startTime,
   });
 
   Map<String, dynamic> toJson() {
@@ -32,6 +37,7 @@ class TaskModel {
       'dueDate': dueDate?.toIso8601String(), // Convert DateTime to String
       'needsSync': needsSync,
       'isDone': isDone,
+      'createdAt': createdAt?.toIso8601String(),
     };
   }
 
@@ -45,6 +51,9 @@ class TaskModel {
           : null,
       needsSync: json['needsSync'] as bool? ?? false,
       isDone: json['isDone'] as bool? ?? false,
+      createdAt: json['createdAt'] != null
+          ? DateTime.parse(json['createdAt'] as String)
+          : null,
     );
   }
 
@@ -55,6 +64,8 @@ class TaskModel {
     DateTime? dueDate, // New parameter
     bool? needsSync,
     bool? isDone,
+    DateTime? createdAt,
+    DateTime? startTime,
   }) {
     return TaskModel(
       id: id ?? this.id,
@@ -63,6 +74,8 @@ class TaskModel {
       dueDate: dueDate ?? this.dueDate, // Include dueDate
       needsSync: needsSync ?? this.needsSync,
       isDone: isDone ?? this.isDone,
+      createdAt: createdAt ?? this.createdAt,
+      startTime: startTime ?? this.startTime,
     );
   }
 }

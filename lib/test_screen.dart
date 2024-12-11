@@ -69,7 +69,7 @@ class _TestScreenState extends State<TestScreen> {
             maxWidth: ResponsiveHelper.getMaxWidth(context),
           ),
           child: Padding(
-            padding: EdgeInsets.all(ResponsiveHelper.getPadding(context)),
+            padding: ResponsiveHelper.getPadding(context),
             child: SingleChildScrollView(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,

@@ -22,10 +22,17 @@ class ResponsiveHelper {
   static double getHeight(BuildContext context) =>
       MediaQuery.sizeOf(context).height;
 
-  static double getPadding(BuildContext context) {
-    if (isMobile(context)) return 16.0;
-    if (isTablet(context)) return 24.0;
-    return 32.0;
+  static EdgeInsetsGeometry getPadding(BuildContext context) {
+    if (isMobile(context)) {
+      return const EdgeInsets.symmetric(horizontal: 22, vertical: 31);
+    }
+    if (isTablet(context)) {
+      return const EdgeInsets.symmetric(horizontal: 22, vertical: 31);
+    }
+    if (isDesktop(context)) {
+      return const EdgeInsets.symmetric(horizontal: 61, vertical: 70);
+    }
+    return const EdgeInsets.all(32.0);
   }
 
   static double getMaxWidth(BuildContext context) {

@@ -9,6 +9,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  just_audio: ^0.9.35
+  just_audio_windows: ^0.2.0  # Add Windows support
+  audio_session: ^0.1.18  # Add this for better audio handling
   # Provides iOS-style icons for Flutter apps
   cupertino_icons: ^1.0.8
   # Allows using Google Fonts in Flutter apps
@@ -30,6 +33,9 @@ dependencies:
   hydrated_bloc: ^9.1.5
   flutter_bloc: ^8.1.6
   package_info_plus: ^4.1.0  # or the latest version
+  flutter_svg: ^2.0.16
+  flutter_sound: ^9.17.8
+  lottie: ^3.2.0
 
 dev_dependencies:
   flutter_test:
@@ -46,3 +52,6 @@ flutter:
     - assets/svgs/
     - assets/lotties/
     - assets/images/
+    - assets/sound/
+    - assets/sound/crowd-cheer-in-school-auditorium-236699.mp3
+

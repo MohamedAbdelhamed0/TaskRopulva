@@ -225,7 +225,11 @@ class TaskBloc extends HydratedBloc<TaskEvent, TaskState> {
   void _handleChangeFilter(ChangeFilter event, Emitter<TaskState> emit) {
     if (state is TasksLoaded) {
       final currentState = state as TasksLoaded;
-      emit(currentState.copyWith(currentFilter: event.filter));
+      emit(TasksLoaded(
+        currentState.tasks,
+        currentFilter: event.filter,
+      ));
+      ConsoleLogger.info('Filter', 'Changed to: ${event.filter.name}');
     }
   }
 
