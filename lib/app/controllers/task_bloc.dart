@@ -22,6 +22,18 @@
 ///
 /// When offline, operations are stored locally and synced when connectivity is restored.
 /// All operations are logged using [ConsoleLogger] for debugging purposes.
+///
+/// The BLoC also includes:
+/// * Retry mechanism for failed operations with a maximum of 3 attempts.
+/// * Throttling to prevent excessive operations within a short period.
+/// * Caching of tasks to optimize performance.
+/// * Batch processing for syncing tasks to Firebase.
+/// * Error handling and recovery mechanisms.
+///
+/// The BLoC listens to connectivity changes and triggers synchronization when the connection is restored.
+/// It also supports task filtering and maintains the current filter state.
+///
+/// The state is persisted using HydratedBloc, allowing the BLoC to restore its state upon app restart.
 
 library;
 
@@ -44,6 +56,11 @@ class TaskBloc extends HydratedBloc<TaskEvent, TaskState> {
   final TaskRepository _taskRepository = getIt<TaskRepository>();
   final ConnectivityHelper _connectivityHelper = getIt<ConnectivityHelper>();
   StreamSubscription? _connectivitySubscription;
+
+  // Add new fields for retry and throttling
+  static const int maxRetryAttempts = 3;
+  final _throttle = Throttle(Duration(seconds: 2));
+  final _cache = <String, TaskModel>{};
 
   TaskBloc() : super(TaskInitial()) {
     _initializeConnectivityListener();
@@ -76,25 +93,28 @@ class TaskBloc extends HydratedBloc<TaskEvent, TaskState> {
   }
 
   Future<void> _handleAddTask(AddTask event, Emitter<TaskState> emit) async {
-    if (state is! TasksLoaded) return;
+    await _throttle.run(() async {
+      if (state is! TasksLoaded) return;
 
-    final currentState = state as TasksLoaded;
-    final newTask = event.task.copyWith(needsSync: true);
-    final updatedTasks = [...currentState.tasks, newTask];
+      final currentState = state as TasksLoaded;
+      final newTask = event.task.copyWith(needsSync: true);
+      final updatedTasks = [...currentState.tasks, newTask];
 
-    // Update local state
-    emit(TasksLoaded(updatedTasks));
-    ConsoleLogger.success(
-        'Local Storage', 'Task added locally: ${newTask.title}');
+      // Update local state
+      emit(TasksLoaded(updatedTasks));
+      ConsoleLogger.success(
+          'Local Storage', 'Task added locally: ${newTask.title}');
 
-    // Sync with Firebase if online
-    await _syncTaskWithFirebase(
-      newTask,
-      updatedTasks,
-      emit,
-      syncOperation: () => _taskRepository.addTask(newTask),
-      operationType: 'add',
-    );
+      // Sync with Firebase if online
+      await _syncTaskWithFirebase(
+        newTask,
+        updatedTasks,
+        emit,
+        syncOperation: () => _taskRepository.addTask(newTask),
+        operationType: 'add',
+      );
+      _cacheTask(newTask);
+    });
   }
 
   Future<void> _handleUpdateTask(
@@ -183,34 +203,79 @@ class TaskBloc extends HydratedBloc<TaskEvent, TaskState> {
     }
   }
 
-  void _handleSyncTasks(SyncTasks event, Emitter<TaskState> emit) async {
-    if (state is TasksLoaded) {
-      final currentState = state as TasksLoaded;
-      final tasks = currentState.tasks;
-      final unSyncedTasks = tasks.where((t) => t.needsSync).toList();
+  // Modified sync method with batch processing
+  Future<void> _handleSyncTasks(
+      SyncTasks event, Emitter<TaskState> emit) async {
+    if (state is! TasksLoaded) return;
 
-      if (unSyncedTasks.isNotEmpty) {
-        ConsoleLogger.info(
-            'Sync', 'Starting sync of ${unSyncedTasks.length} tasks...');
+    final currentState = state as TasksLoaded;
+    final unSyncedTasks = currentState.tasks.where((t) => t.needsSync).toList();
 
-        for (var task in unSyncedTasks) {
-          try {
-            await _taskRepository.updateTask(task);
-            task.needsSync = false;
-            ConsoleLogger.success(
-                'Sync', 'Successfully synced task: ${task.title}');
-          } catch (e) {
-            ConsoleLogger.error(
-                'Sync', 'Failed to sync task ${task.title}: ${e.toString()}');
-          }
-        }
+    if (unSyncedTasks.isEmpty) {
+      ConsoleLogger.info('Sync', 'No tasks need syncing');
+      return;
+    }
 
-        emit(TasksLoaded(tasks));
-        ConsoleLogger.success('Sync', 'Sync completed');
-      } else {
-        ConsoleLogger.info('Sync', 'No tasks need syncing');
+    ConsoleLogger.info(
+        'Sync', 'Starting batch sync of ${unSyncedTasks.length} tasks...');
+
+    // Process in batches of 5
+    for (var i = 0; i < unSyncedTasks.length; i += 5) {
+      final batch = unSyncedTasks.skip(i).take(5);
+      await Future.wait(
+        batch.map((task) => _syncSingleTask(task, emit)),
+      );
+    }
+
+    emit(TasksLoaded(currentState.tasks));
+    ConsoleLogger.success('Sync', 'Batch sync completed');
+  }
+
+  Future<void> _syncSingleTask(TaskModel task, Emitter<TaskState> emit) async {
+    try {
+      await _retryOperation(
+        () => _taskRepository.updateTask(task),
+        'sync',
+        task.title,
+      );
+      task.needsSync = false;
+      _cache[task.id] = task;
+      ConsoleLogger.success('Sync', 'Successfully synced task: ${task.title}');
+    } catch (e) {
+      emit(TaskError(e.toString(), previousState: state));
+      ConsoleLogger.error(
+          'Sync', 'Failed to sync task ${task.title}: ${e.toString()}');
+    }
+  }
+
+  // Add error recovery method
+  Future<void> _retryOperation(
+    Future<void> Function() operation,
+    String operationType,
+    String taskTitle,
+  ) async {
+    int attempts = 0;
+    while (attempts < maxRetryAttempts) {
+      try {
+        await operation();
+        return;
+      } catch (e) {
+        attempts++;
+        ConsoleLogger.warning(
+          'Retry',
+          'Attempt $attempts failed for $operationType: $taskTitle',
+        );
+        await Future.delayed(Duration(seconds: attempts));
       }
     }
+    throw MaxRetryExceededException('Failed after $maxRetryAttempts attempts');
+  }
+
+  // Add cache management
+  TaskModel? _getCachedTask(String taskId) => _cache[taskId];
+
+  void _cacheTask(TaskModel task) {
+    _cache[task.id] = task;
   }
 
   void _handleLoadTasks(LoadTasks event, Emitter<TaskState> emit) {
@@ -236,6 +301,8 @@ class TaskBloc extends HydratedBloc<TaskEvent, TaskState> {
   @override
   Future<void> close() {
     _connectivitySubscription?.cancel();
+    _throttle.dispose();
+    _cache.clear();
     return super.close();
   }
 
@@ -265,4 +332,28 @@ class TaskBloc extends HydratedBloc<TaskEvent, TaskState> {
     }
     return null;
   }
+}
+
+// Add new utility classes
+class Throttle {
+  final Duration duration;
+  Timer? _timer;
+
+  Throttle(this.duration);
+
+  Future<void> run(Future<void> Function() action) async {
+    if (_timer?.isActive ?? false) return;
+
+    await action();
+    _timer = Timer(duration, () {});
+  }
+
+  void dispose() => _timer?.cancel();
+}
+
+class MaxRetryExceededException implements Exception {
+  final String message;
+  MaxRetryExceededException(this.message);
+  @override
+  String toString() => message;
 }

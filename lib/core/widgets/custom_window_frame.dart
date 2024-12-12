@@ -4,6 +4,7 @@ import 'package:task_ropulva_todo_app/core/widgets/connectivity_status_icon.dart
 import 'package:window_manager/window_manager.dart';
 
 import '../themes/colors.dart';
+import 'ExitConfirmationDialog.dart';
 
 class CustomWindowFrame extends StatelessWidget {
   final Widget child;
@@ -32,6 +33,9 @@ class CustomWindowFrame extends StatelessWidget {
               Text(
                 title,
                 style: TextStyle(
+                  overflow: TextOverflow.ellipsis,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
                   color: Theme.of(context).brightness == Brightness.dark
                       ? MyColors.white
                       : MyColors.black,
@@ -115,7 +119,13 @@ class WindowCaption extends StatelessWidget {
           WindowCaptionButton.close(
             brightness: brightness,
             onPressed: () async {
-              await windowManager.close();
+              final shouldExit = await showDialog<bool>(
+                context: context,
+                builder: (context) => const ExitConfirmationDialog(),
+              );
+              if (shouldExit == true) {
+                await windowManager.close();
+              }
             },
           ),
         ],

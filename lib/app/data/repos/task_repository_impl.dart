@@ -1,3 +1,16 @@
+/// A concrete implementation of [TaskRepository] that manages task-related operations using remote data source.
+///
+/// This repository acts as a mediator between the data layer and the domain layer,
+/// handling tasks and authentication operations through a [RemoteDataSource].
+///
+/// Key responsibilities include:
+/// * Managing user authentication (anonymous sign-in and sign-out)
+/// * Performing CRUD operations on tasks
+/// * Streaming authentication state changes
+/// * Providing access to current user information
+///
+/// All operations are delegated to the [RemoteDataSource] while handling potential errors.
+/// In case of errors, they are propagated up the call stack using [rethrow].
 import '../data_sources/remote_data_source.dart';
 import '../models/task_model.dart';
 import 'task_repository.dart';

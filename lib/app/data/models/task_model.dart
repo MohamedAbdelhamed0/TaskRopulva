@@ -1,3 +1,29 @@
+/// A model class representing a task in the todo application.
+///
+/// This class is integrated with Hive for local storage with a [typeId] of 0.
+/// Each task contains:
+/// * [id] - Unique identifier for the task
+/// * [title] - The title of the task
+/// * [description] - Detailed description of the task
+/// * [dueDate] - Optional deadline for the task
+/// * [needsSync] - Flag indicating if the task needs to be synced with remote storage
+/// * [isDone] - Flag indicating if the task is completed
+/// * [createdAt] - Timestamp when the task was created
+/// * [startTime] - Optional timestamp when the task was started
+///
+/// The class provides methods to:
+/// * Convert to and from JSON ([toJson] and [fromJson])
+/// * Create a copy of the task with modified fields ([copyWith])
+///
+/// Example:
+/// ```dart
+/// final task = TaskModel(
+///   id: 'unique_id',
+///   title: 'Complete project',
+///   description: 'Finish the todo app',
+///   dueDate: DateTime.now().add(Duration(days: 1)),
+/// );
+/// ```
 import 'package:hive/hive.dart';
 
 @HiveType(typeId: 0)

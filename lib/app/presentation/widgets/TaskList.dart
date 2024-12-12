@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 
 import '../../../core/services/responsive_helper.dart';
 import '../../data/models/task_model.dart';
@@ -37,8 +38,10 @@ class TaskList extends StatelessWidget {
                   separatorBuilder: (context, index) =>
                       const SizedBox(height: 8),
                   itemCount: filteredTasks.length,
-                  itemBuilder: (context, index) =>
-                      TaskListItem2(task: filteredTasks[index]),
+                  itemBuilder: (context, index) => TaskListItem2(
+                          task: filteredTasks[index])
+                      .animate()
+                      .slideX(duration: Duration(milliseconds: 200 * index)),
                 )
               : GridView.builder(
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -48,8 +51,10 @@ class TaskList extends StatelessWidget {
                     mainAxisSpacing: 16,
                   ),
                   itemCount: filteredTasks.length,
-                  itemBuilder: (context, index) =>
-                      TaskListItem2(task: filteredTasks[index]),
+                  itemBuilder: (context, index) => TaskListItem2(
+                          task: filteredTasks[index])
+                      .animate()
+                      .slideX(duration: Duration(milliseconds: 200 * index)),
                 ),
     );
   }

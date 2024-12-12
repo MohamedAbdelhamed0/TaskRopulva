@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:task_ropulva_todo_app/app/presentation/widgets/showTaskDialog.dart';
 
 import '../../../core/services/responsive_helper.dart';
@@ -24,40 +25,36 @@ class TaskListContent extends StatelessWidget {
 
     return Padding(
       padding: ResponsiveHelper.getPadding(context),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Row(
+          children: [
+            Expanded(
+              flex: 2,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const HeaderSection().animate().slideX(duration: 500.ms),
+                  FilterChips(tasks: tasks, currentFilter: state.currentFilter),
+                ].animate(interval: 500.ms).slideX(duration: 600.ms),
+              ),
+            ),
+            if (isPC)
               Expanded(
-                flex: 2,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const HeaderSection(),
-                    FilterChips(
-                        tasks: tasks, currentFilter: state.currentFilter),
-                  ],
+                flex: 0,
+                child: AddButtonWindows(
+                  onPressed: () => showTaskDialog(context),
                 ),
               ),
-              if (isPC)
-                Expanded(
-                  flex: 0,
-                  child: AddButtonWindows(
-                    onPressed: () => showTaskDialog(context),
-                  ),
-                ),
-            ],
-          ),
-          TaskList(
-            filteredTasks: filteredTasks,
-            currentFilter: state.currentFilter,
-            totalTasks: tasks.length,
-            unfinishedTasks: tasks.where((t) => !t.isDone).length,
-          ),
-          if (!isPC) const SizedBox(height: 60),
-        ],
-      ),
+          ],
+        ),
+        TaskList(
+          filteredTasks: filteredTasks,
+          currentFilter: state.currentFilter,
+          totalTasks: tasks.length,
+          unfinishedTasks: tasks.where((t) => !t.isDone).length,
+        ),
+        if (!isPC) const SizedBox(height: 60),
+      ]),
     );
   }
 
