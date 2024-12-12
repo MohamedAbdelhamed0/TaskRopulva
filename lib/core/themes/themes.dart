@@ -28,7 +28,7 @@ class AppTheme {
   static TextTheme _buildTextTheme(CustomColorScheme colors) => TextTheme(
         headlineLarge: _getTextStyle(
           fontSize: 30,
-          fontWeight: FontWeight.w500,
+          fontWeight: FontWeight.w600,
           font: GoogleFonts.inter,
           color: colors.onSurface,
         ),
@@ -40,7 +40,7 @@ class AppTheme {
         ),
         bodyMedium: _getTextStyle(
           fontSize: 12,
-          fontWeight: FontWeight.w400,
+          fontWeight: FontWeight.w500,
           font: GoogleFonts.roboto,
           color: colors.onSurface,
         ),
@@ -107,7 +107,7 @@ class AppTheme {
         fontSize: 12,
         color: colors.onSurface.withOpacity(0.5),
         fontStyle: FontStyle.normal,
-        fontWeight: FontWeight.w400,
+        fontWeight: FontWeight.w600,
       );
 
   static ChipThemeData _buildChipTheme(CustomColorScheme colors) =>
