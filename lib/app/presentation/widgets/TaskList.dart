@@ -22,7 +22,7 @@ class TaskList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bool isMobile = ResponsiveHelper.isMobile(context);
-    final double maxWidth = ResponsiveHelper.getMaxWidth(context);
+    ResponsiveHelper.getMaxWidth(context);
     final int crossAxisCount = ResponsiveHelper.isDesktop(context) ? 3 : 2;
 
     return Expanded(

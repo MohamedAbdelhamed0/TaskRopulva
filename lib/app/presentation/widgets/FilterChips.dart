@@ -14,7 +14,7 @@ class FilterChips extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       height: 50,
       child: ListView(
         scrollDirection: Axis.horizontal,

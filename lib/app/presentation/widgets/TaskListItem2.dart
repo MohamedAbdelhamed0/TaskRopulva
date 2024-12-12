@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:task_ropulva_todo_app/app/core/constants/constants.dart';
-import '../../utils/date_formatter.dart';
+import 'package:task_ropulva_todo_app/core/services/snackbar_service.dart';
 
-import '../../../core/services/responsive_helper.dart';
+import '../../../core/constants/constants.dart';
 import '../../../core/themes/colors.dart';
+import '../../../core/utils/date_formatter.dart';
 import '../../controllers/task_bloc.dart';
 import '../../data/models/task_model.dart';
 import 'CongratulationsDialog.dart';
@@ -192,6 +192,10 @@ class _TaskListItem2State extends State<TaskListItem2> {
         break;
       case 'delete':
         taskBloc.add(DeleteTask(widget.task.id));
+        SnackBarService.showDelete(
+          'Task deleted',
+          () => taskBloc.add(AddTask(widget.task)),
+        );
         break;
     }
   }

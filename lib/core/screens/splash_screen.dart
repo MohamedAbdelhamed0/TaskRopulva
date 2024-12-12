@@ -1,14 +1,16 @@
 import 'dart:math';
 import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:task_ropulva_todo_app/app/presentation/screens/task_list_screen.dart';
+
+import '../services/TransitionHelper.dart'; // Add this import
 import '../services/version_helper.dart';
 import '../services/window_helper.dart';
 import '../themes/colors.dart';
 import '../widgets/connectivity_wrapper.dart';
 import '../widgets/custom_window_frame.dart';
-import '../services/TransitionHelper.dart'; // Add this import
 
 class AnimationConstants {
   static const splashDuration = Duration(seconds: 4);
@@ -48,7 +50,7 @@ class Star {
 
 class StarField extends StatefulWidget {
   final Size screenSize;
-  const StarField({Key? key, required this.screenSize}) : super(key: key);
+  const StarField({super.key, required this.screenSize});
 
   @override
   State<StarField> createState() => _StarFieldState();
@@ -129,8 +131,7 @@ class StarPainter extends CustomPainter {
 class SplashContent extends StatelessWidget {
   final String formattedVersion;
 
-  const SplashContent({Key? key, required this.formattedVersion})
-      : super(key: key);
+  const SplashContent({super.key, required this.formattedVersion});
 
   @override
   Widget build(BuildContext context) {

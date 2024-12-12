@@ -1,5 +1,7 @@
 import 'dart:ui';
 
+import 'package:flutter/foundation.dart';
+
 import 'core/themes/colors.dart';
 
 void main() {
@@ -7,5 +9,7 @@ void main() {
   Color headlineColor = MyColors.black;
 
   // Printing the color
-  print('Headline color: $headlineColor');
+  if (kDebugMode) {
+    print('Headline color: $headlineColor');
+  }
 }

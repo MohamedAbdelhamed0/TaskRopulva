@@ -13,7 +13,7 @@ import 'add_buttom_windos.dart';
 class TaskListContent extends StatelessWidget {
   final TasksLoaded state;
 
-  const TaskListContent({required this.state});
+  const TaskListContent({super.key, required this.state});
 
   @override
   Widget build(BuildContext context) {

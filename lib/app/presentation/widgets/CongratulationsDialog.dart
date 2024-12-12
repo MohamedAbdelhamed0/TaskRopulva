@@ -68,10 +68,10 @@ class CongratulationsDialog extends StatefulWidget {
   });
 
   @override
-  _CongratulationsDialogState createState() => _CongratulationsDialogState();
+  CongratulationsDialogState createState() => CongratulationsDialogState();
 }
 
-class _CongratulationsDialogState extends State<CongratulationsDialog>
+class CongratulationsDialogState extends State<CongratulationsDialog>
     with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
   late final Animation<double> _scaleAnimation;

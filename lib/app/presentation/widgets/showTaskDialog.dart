@@ -1,10 +1,13 @@
 import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../../core/services/snackbar_service.dart';
 import '../../../core/themes/colors.dart';
+import '../../../core/utils/date_formatter.dart';
 import '../../controllers/task_bloc.dart';
 import '../../data/models/task_model.dart';
-import '../../utils/date_formatter.dart';
 import 'task_form_validation.dart';
 
 class _DialogConstants {
@@ -30,13 +33,41 @@ class _TaskDialogData {
   }
 }
 
-void showTaskDialog(BuildContext context, {TaskModel? existingTask}) {
-  final dialogData = _TaskDialogData(existingTask: existingTask);
+class _TaskDialog extends StatefulWidget {
+  final TaskModel? existingTask;
 
+  const _TaskDialog({this.existingTask});
+
+  @override
+  State<_TaskDialog> createState() => _TaskDialogState();
+}
+
+class _TaskDialogState extends State<_TaskDialog> {
+  late final _TaskDialogData _data;
+
+  @override
+  void initState() {
+    super.initState();
+    _data = _TaskDialogData(existingTask: widget.existingTask);
+  }
+
+  @override
+  void dispose() {
+    _data.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return _buildTaskDialog(context, _data);
+  }
+}
+
+void showTaskDialog(BuildContext context, {TaskModel? existingTask}) {
   showDialog(
     context: context,
-    builder: (context) => _buildTaskDialog(context, dialogData),
-  ).then((_) => dialogData.dispose());
+    builder: (context) => _TaskDialog(existingTask: existingTask),
+  );
 }
 
 Widget _buildTaskDialog(BuildContext context, _TaskDialogData data) {
@@ -123,21 +154,24 @@ Future<void> _selectDateTime(BuildContext context, _TaskDialogData data) async {
     lastDate: DateTime(2100),
   );
 
-  if (date != null) {
+  if (date != null && context.mounted) {
     final time = await showTimePicker(
       context: context,
       initialTime: TimeOfDay.fromDateTime(data.selectedDate ?? DateTime.now()),
     );
 
-    if (time != null) {
-      data.selectedDate = DateTime(
-        date.year,
-        date.month,
-        date.day,
-        time.hour,
-        time.minute,
-      );
-      (context as Element).markNeedsBuild();
+    if (time != null && context.mounted) {
+      if (context is StatefulElement) {
+        (context.state as State).setState(() {
+          data.selectedDate = DateTime(
+            date.year,
+            date.month,
+            date.day,
+            time.hour,
+            time.minute,
+          );
+        });
+      }
     }
   }
 }
@@ -161,9 +195,7 @@ void _handleSubmit(BuildContext context, _TaskDialogData data) {
 bool _validateForm(BuildContext context, _TaskDialogData data) {
   if (!data.formKey.currentState!.validate()) return false;
   if (data.selectedDate == null) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Please select a due date')),
-    );
+    SnackBarService.showWarning('Please select a due date');
     return false;
   }
   return true;
@@ -194,13 +226,9 @@ void _dispatchTaskEvent(
 }
 
 void _showSuccessMessage(BuildContext context, TaskModel? existingTask) {
-  ScaffoldMessenger.of(context).showSnackBar(
-    SnackBar(
-      content: Text(
-        existingTask == null
-            ? 'Task added successfully'
-            : 'Task updated successfully',
-      ),
-    ),
+  SnackBarService.showSuccess(
+    existingTask == null
+        ? 'Task added successfully'
+        : 'Task updated successfully',
   );
 }

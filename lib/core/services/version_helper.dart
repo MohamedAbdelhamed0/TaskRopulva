@@ -24,7 +24,7 @@ class VersionHelper {
   }
 
   String get formattedVersion {
-    return 'v${version}+${buildNumber}';
+    return 'v$version+$buildNumber';
   }
 
   bool get isInitialized {
