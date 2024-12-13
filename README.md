@@ -44,7 +44,7 @@ We implemented Clean Architecture to ensure:
 ## ⬇️ Download
 
 Get the latest release of our app:
-[Download Latest Release](https://github.com/yourusername/task_ropulva_todo_app/releases)
+[Download Latest Release](https://github.com/MohamedAbdelhamed0/TaskRopulva/releases/tag/v1.0.0)
 
 ## 🔧 Helper Utilities
 
