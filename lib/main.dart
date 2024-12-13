@@ -1,3 +1,30 @@
+/// Main entry point and initialization functions for the Task App.
+///
+/// The initialization process includes:
+/// * Setting up HydratedBloc storage for state persistence
+/// * Initializing Firebase services with default platform options
+/// * Setting up dependency injection and service locator
+/// * Configuring window properties (if applicable)
+/// * Handling anonymous authentication for task repository
+///
+/// The app initialization is handled in discrete steps with proper error handling:
+/// 1. Storage initialization via [_initializeStorage]
+/// 2. Firebase setup through [_initializeFirebase]
+/// 3. Services configuration using [_initializeServices]
+/// 4. Window setup via [WindowHelper.initializeWindow]
+///
+/// If any initialization step fails, the error is handled by [_handleInitializationError],
+/// which will print the error in debug mode and re-throw it.
+///
+/// Example:
+/// ```dart
+/// void main() async {
+///   await initializeApp();
+///   runApp(const TaskApp());
+/// }
+/// ```
+///
+/// Throws an exception if initialization fails.
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';

@@ -1,3 +1,25 @@
+/// A utility class that provides various page transition animations for Flutter applications.
+///
+/// This class contains static methods that return [PageRouteBuilder] objects with
+/// different transition animations. These can be used when navigating between screens
+/// to create smooth and visually appealing transitions.
+///
+/// Available transitions:
+/// * [slideRightToLeft] - Slides the new page in from right to left
+/// * [slideBottomToTop] - Slides the new page in from bottom to top
+/// * [fade] - Fades the new page in
+/// * [scale] - Scales the new page from small to full size
+/// * [fadeAndScale] - Combines fade and scale animations
+///
+/// Example usage:
+/// ```dart
+/// Navigator.of(context).push(
+///   TransitionHelper.slideRightToLeft(
+///     page: NextScreen(),
+///     duration: Duration(milliseconds: 300),
+///   ),
+/// );
+/// ```
 import 'package:flutter/material.dart';
 
 class TransitionHelper {

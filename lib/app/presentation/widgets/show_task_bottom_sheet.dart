@@ -1,3 +1,26 @@
+/// A widget that displays an animated form for creating or editing tasks.
+///
+/// This widget provides a collapsible form that expands when clicked. When expanded,
+/// it shows input fields for task title and due date. The form can be used both for
+/// creating new tasks and editing existing ones.
+///
+/// The widget includes:
+/// * An animated container that expands/collapses smoothly
+/// * A blur effect on the background when expanded
+/// * Form validation for the task title
+/// * Date and time picker for selecting due date
+/// * Integration with TaskBloc for state management
+///
+/// Example:
+/// ```dart
+/// AnimatedTaskForm(
+///   existingTask: taskModel, // Pass null for creating new task
+/// )
+/// ```
+///
+/// Parameters:
+/// * [existingTask] - Optional parameter that contains the task to be edited.
+///   If null, the form will be in "create new task" mode.
 import 'dart:ui';
 
 import 'package:flutter/material.dart';

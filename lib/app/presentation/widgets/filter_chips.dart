@@ -1,3 +1,21 @@
+/// A widget that displays a horizontal list of filter chips for task filtering.
+///
+/// The filter chips show different task categories (All, Done, Not Done) along with
+/// the count of tasks in each category. The chips are animated using fade effects
+/// when they appear.
+///
+/// Properties:
+/// * [tasks] - List of TaskModel objects to be filtered
+/// * [currentFilter] - The currently active TaskFilter enum value
+///
+/// The widget supports three filter states:
+/// * All - Shows total count of tasks
+/// * Done - Shows count of completed tasks
+/// * Not Done - Shows count of active (incomplete) tasks
+///
+/// Each chip changes its appearance based on whether it represents the current
+/// filter state, using different background colors and text colors to indicate
+/// selection.
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

@@ -1,3 +1,36 @@
+/// A splash screen widget that displays an animated logo, app title, author information,
+/// and version details with a starfield background effect.
+///
+/// The splash screen includes:
+/// * An animated starfield background
+/// * A scaling app logo animation
+/// * Fade-in animations for app title, author info, and version
+/// * Automatic navigation to the main task list screen after a delay
+///
+/// Configuration constants are defined in [AnimationConstants] class.
+///
+/// Example:
+/// ```dart
+/// MaterialApp(
+///   home: SplashScreen(),
+/// )
+/// ```
+///
+/// The screen consists of multiple components:
+/// * [StarField] - Creates an animated background of moving stars
+/// * [SplashContent] - Contains the main content with animations
+/// * [Star] - Represents individual star objects in the background
+///
+/// After [AnimationConstants.splashDuration], the screen automatically transitions
+/// to [TaskListScreen] using a bottom-to-top slide animation.
+///
+/// For desktop platforms, the subsequent screen is wrapped in a [CustomWindowFrame]
+/// and for all platforms, it's wrapped in a [ConnectivityWrapper].
+///
+/// See also:
+/// * [AnimationConstants] - Contains timing configurations for animations
+/// * [VersionHelper] - Handles version information display
+/// * [TransitionHelper] - Manages screen transition animations
 import 'dart:math';
 import 'dart:ui';
 

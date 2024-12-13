@@ -1,3 +1,22 @@
+/// A screen widget that displays a list of tasks.
+///
+/// This widget implements a stateful screen that shows a list of tasks and provides
+/// functionality to add new tasks through a floating action button on touch devices.
+///
+/// Features:
+/// * Transparent status bar with dark icons
+/// * Responsive design that adapts to touch and non-touch devices
+/// * Integration with TaskBloc for state management
+/// * Loading indicator while tasks are being fetched
+/// * Floating action button for adding new tasks (only on touch devices)
+///
+/// The screen's UI elements are styled according to the system's theme and include:
+/// * A floating action button centered at the bottom (for touch devices)
+/// * A main content area displaying the task list
+/// * A loading indicator when tasks are being loaded
+///
+/// The status bar appearance is managed in the widget's lifecycle methods to maintain
+/// consistency with the app's design.
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart'; // Import SystemChrome
 import 'package:flutter_bloc/flutter_bloc.dart';

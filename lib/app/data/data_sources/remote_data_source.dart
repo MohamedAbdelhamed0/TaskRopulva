@@ -1,3 +1,33 @@
+/// A data source class that handles remote operations with Firebase Authentication and Firestore.
+///
+/// This class manages user authentication and CRUD operations for tasks in Firestore.
+/// It provides methods for anonymous sign-in, sign-out, and task management.
+///
+/// Example:
+/// ```dart
+/// final remoteDataSource = RemoteDataSource();
+/// await remoteDataSource.signInAnonymously();
+/// await remoteDataSource.addTask(task);
+/// ```
+///
+/// The class uses two main Firebase collections:
+/// - 'users': The root collection for user data
+/// - 'tasks': A subcollection under each user document containing their tasks
+///
+/// Authentication Features:
+/// - Anonymous sign-in
+/// - Sign-out
+/// - Current user access
+/// - Auth state changes stream
+///
+/// Task Management Features:
+/// - Add new tasks
+/// - Update existing tasks
+/// - Delete tasks
+/// - Stream all tasks
+///
+/// This class implements error handling for both authentication and database operations,
+/// throwing appropriate exceptions with descriptive messages when operations fail.
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';

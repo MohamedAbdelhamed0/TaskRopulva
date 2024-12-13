@@ -1,3 +1,42 @@
+/// A BLoC (Business Logic Component) that manages task-related state and operations.
+///
+/// This BLoC handles task management operations including adding, updating, deleting,
+/// and syncing tasks with Firebase. It also manages offline capabilities and state persistence.
+///
+/// Key features:
+/// * Offline-first architecture with background syncing
+/// * Retry mechanism for failed operations
+/// * Request throttling to prevent overload
+/// * In-memory caching for better performance
+/// * Batch processing for sync operations
+///
+/// Example usage:
+/// ```dart
+/// final taskBloc = TaskBloc();
+/// taskBloc.add(AddTask(newTask));
+/// taskBloc.add(UpdateTask(modifiedTask));
+/// taskBloc.add(DeleteTask(taskId));
+/// ```
+///
+/// The BLoC maintains its state using [HydratedBloc] for persistence across app restarts.
+/// It automatically handles connectivity changes and syncs pending changes when online.
+///
+/// Configuration:
+/// * [maxRetryAttempts]: Maximum number of retry attempts for failed operations (default: 3)
+/// * Throttle duration: 2 seconds between operations
+///
+/// Events handled:
+/// * [AddTask]: Adds a new task
+/// * [UpdateTask]: Updates an existing task
+/// * [DeleteTask]: Removes a task
+/// * [SyncTasks]: Synchronizes pending changes with Firebase
+/// * [LoadTasks]: Loads existing tasks
+/// * [ChangeFilter]: Updates the current task filter
+///
+/// States:
+/// * [TaskInitial]: Initial state before any tasks are loaded
+/// * [TasksLoaded]: Contains the current list of tasks and filter
+/// * [TaskError]: Represents an error state with the previous state preserved
 import 'dart:async';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
