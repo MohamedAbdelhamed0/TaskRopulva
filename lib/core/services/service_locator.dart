@@ -5,6 +5,7 @@ import '../../app/data/repos/task_repository.dart';
 import '../../app/data/repos/task_repository_impl.dart';
 import '../services/connectivity_helper.dart';
 import '../services/cache_helper.dart';
+import 'calendar_service.dart';
 
 final getIt = GetIt.instance;
 
@@ -27,6 +28,9 @@ Future<void> setupServiceLocator() async {
   getIt.registerLazySingleton<TaskRepository>(
     () => TaskRepositoryImpl(getIt<RemoteDataSource>()),
   );
+
+  // Register CalendarService
+  getIt.registerLazySingleton(() => CalendarService());
 
   // Initialize required services
 }

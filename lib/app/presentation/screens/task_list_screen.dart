@@ -6,8 +6,6 @@ import '../../controllers/task_bloc.dart';
 import '../widgets/show_task_bottom_sheet.dart';
 import '../widgets/task_list_content.dart';
 
-enum TaskFilter { all, active, completed }
-
 class TaskListScreen extends StatefulWidget {
   const TaskListScreen({super.key});
 

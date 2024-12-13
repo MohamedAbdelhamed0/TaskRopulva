@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../core/enums.dart';
 import '../../../core/themes/colors.dart';
 import '../../controllers/task_bloc.dart';
 import '../../data/models/task_model.dart';
-import '../screens/task_list_screen.dart';
 
 class FilterChips extends StatelessWidget {
   final List<TaskModel> tasks;

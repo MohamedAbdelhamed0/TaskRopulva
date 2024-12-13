@@ -17,13 +17,16 @@ import 'task_repository.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../../../core/services/cache_helper.dart';
 import '../../../core/services/service_locator.dart';
+import '../../../core/services/calendar_service.dart';
 
 class TaskRepositoryImpl implements TaskRepository {
   final RemoteDataSource _remoteDataSource;
   final CacheHelper _cacheHelper;
+  final CalendarService _calendarService;
 
   TaskRepositoryImpl(this._remoteDataSource)
-      : _cacheHelper = getIt<CacheHelper>();
+      : _cacheHelper = getIt<CacheHelper>(),
+        _calendarService = getIt<CalendarService>();
 
   @override
   User? get currentUser => _remoteDataSource.currentUser;
@@ -66,6 +69,9 @@ class TaskRepositoryImpl implements TaskRepository {
   Future<void> addTask(TaskModel task) async {
     try {
       await _remoteDataSource.addTask(task);
+      if (task.dueDate != null && _calendarService.isInitialized) {
+        await _calendarService.addTaskToCalendar(task);
+      }
     } catch (e) {
       rethrow;
     }
@@ -75,6 +81,9 @@ class TaskRepositoryImpl implements TaskRepository {
   Future<void> updateTask(TaskModel task) async {
     try {
       await _remoteDataSource.updateTask(task);
+      if (task.dueDate != null && _calendarService.isInitialized) {
+        await _calendarService.updateTaskInCalendar(task);
+      }
     } catch (e) {
       rethrow;
     }
@@ -84,6 +93,9 @@ class TaskRepositoryImpl implements TaskRepository {
   Future<void> deleteTask(String taskId) async {
     try {
       await _remoteDataSource.deleteTask(taskId);
+      if (_calendarService.isInitialized) {
+        await _calendarService.deleteTaskFromCalendar(taskId);
+      }
     } catch (e) {
       rethrow;
     }

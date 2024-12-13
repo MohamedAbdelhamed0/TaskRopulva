@@ -1,53 +1,14 @@
-/// A BLoC (Business Logic Component) that manages the state of tasks in the application.
-///
-/// This BLoC handles task operations like adding, updating, deleting, and syncing tasks
-/// with both local storage and Firebase. It also manages connectivity status and task filtering.
-///
-/// Features:
-/// * Persists state using HydratedBloc
-/// * Handles offline/online synchronization
-/// * Manages task filtering
-/// * Provides real-time connectivity monitoring
-///
-/// Example:
-/// ```dart
-/// final taskBloc = TaskBloc();
-/// taskBloc.add(AddTask(newTask));
-/// taskBloc.add(UpdateTask(existingTask));
-/// ```
-///
-/// The bloc maintains its state through [TaskState] and responds to [TaskEvent]s.
-/// It uses [TaskRepository] for data persistence and [ConnectivityHelper] for
-/// network connectivity monitoring.
-///
-/// When offline, operations are stored locally and synced when connectivity is restored.
-/// All operations are logged using [ConsoleLogger] for debugging purposes.
-///
-/// The BLoC also includes:
-/// * Retry mechanism for failed operations with a maximum of 3 attempts.
-/// * Throttling to prevent excessive operations within a short period.
-/// * Caching of tasks to optimize performance.
-/// * Batch processing for syncing tasks to Firebase.
-/// * Error handling and recovery mechanisms.
-///
-/// The BLoC listens to connectivity changes and triggers synchronization when the connection is restored.
-/// It also supports task filtering and maintains the current filter state.
-///
-/// The state is persisted using HydratedBloc, allowing the BLoC to restore its state upon app restart.
-
-library;
-
 import 'dart:async';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 
+import '../../core/enums.dart';
 import '../../core/services/connectivity_helper.dart';
 import '../../core/services/console_logger.dart';
 import '../../core/services/service_locator.dart';
 import '../data/models/task_model.dart';
 import '../data/repos/task_repository.dart';
-import '../presentation/screens/task_list_screen.dart';
 
 part 'task_event.dart';
 part 'task_state.dart';
