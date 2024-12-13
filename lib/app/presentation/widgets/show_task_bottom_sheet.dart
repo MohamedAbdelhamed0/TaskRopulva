@@ -60,14 +60,14 @@ class _AnimatedTaskFormState extends State<AnimatedTaskForm> {
           },
           decoration: BoxDecoration(
             color: isExpanded ? MyColors.white : Colors.transparent,
-            borderRadius: BorderRadius.circular(isExpanded ? 16 : 28),
+            borderRadius: BorderRadius.circular(isExpanded ? 16 : 16),
             boxShadow: [
               BoxShadow(
                 color: isExpanded
                     ? Colors.black.withOpacity(0.250)
                     : Colors.transparent,
-                blurRadius: 4,
-                offset: const Offset(0, -4),
+                blurRadius: isExpanded ? 4 : 0,
+                offset: isExpanded ? const Offset(0, 4) : const Offset(0, 0),
               ),
             ],
           ),

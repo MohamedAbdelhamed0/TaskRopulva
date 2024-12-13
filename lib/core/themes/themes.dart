@@ -86,7 +86,7 @@ class AppTheme {
         disabledBorder: _buildInputBorder(),
         enabledBorder: _buildInputBorder(),
         focusedBorder: _buildInputBorder(radius: 8.0),
-        fillColor: colors.surface,
+        fillColor: colors.grey.withOpacity(.20),
         hoverColor: colors.primary.withOpacity(0.1),
         contentPadding: const EdgeInsets.symmetric(
           vertical: 8.0,

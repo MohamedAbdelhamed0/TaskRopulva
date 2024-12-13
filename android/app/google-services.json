@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "148086989835",
+    "project_id": "to-do-ropulva",
+    "storage_bucket": "to-do-ropulva.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:148086989835:android:1422c46f57647605c2530e",
+        "android_client_info": {
+          "package_name": "com.ropulva"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDmCnH-4oQ7HCCYsrWUejdpF-4l7L6XYS0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

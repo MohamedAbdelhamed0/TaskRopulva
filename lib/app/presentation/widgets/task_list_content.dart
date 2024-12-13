@@ -35,7 +35,7 @@ class TaskListContent extends StatelessWidget {
                 children: [
                   const HeaderSection().animate().slideX(duration: 500.ms),
                   FilterChips(tasks: tasks, currentFilter: state.currentFilter),
-                ].animate(interval: 500.ms).slideX(duration: 600.ms),
+                ].animate(interval: 500.ms).slideX(duration: 700.ms),
               ),
             ),
             if (isPC)

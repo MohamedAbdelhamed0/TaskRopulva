@@ -35,6 +35,7 @@ class TaskList extends StatelessWidget {
             )
           : isMobile
               ? ListView.separated(
+                  padding: EdgeInsets.zero,
                   separatorBuilder: (context, index) =>
                       const SizedBox(height: 8),
                   itemCount: filteredTasks.length,

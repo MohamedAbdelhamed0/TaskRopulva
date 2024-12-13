@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:task_ropulva_todo_app/app/presentation/widgets/show_task_dialog.dart';
 
 import '../../../core/enums.dart';
 import '../../../core/themes/colors.dart';
@@ -46,22 +45,22 @@ class EmptyTaskList extends StatelessWidget {
                       ?.withOpacity(0.7),
                 ),
           ),
-          const SizedBox(height: 32),
-          FilledButton.icon(
-            onPressed: () => showTaskDialog(context),
-            icon: const Icon(Icons.add),
-            label: Text(_getButtonText()),
-            style: FilledButton.styleFrom(
-              fixedSize: Size(MediaQuery.sizeOf(context).width / 2, 53),
-              minimumSize: Size(MediaQuery.sizeOf(context).width / 2, 53),
-              maximumSize: Size(MediaQuery.sizeOf(context).width / 2, 53),
-              padding: const EdgeInsets.symmetric(
-                horizontal: 24,
-                vertical: 12,
-              ),
-              backgroundColor: _getButtonColor(context),
-            ),
-          ),
+          // const SizedBox(height: 32),
+          // FilledButton.icon(
+          //   onPressed: () => showTaskDialog(context),
+          //   icon: const Icon(Icons.add),
+          //   label: Text(_getButtonText()),
+          //   style: FilledButton.styleFrom(
+          //     fixedSize: Size(MediaQuery.sizeOf(context).width / 2, 53),
+          //     minimumSize: Size(MediaQuery.sizeOf(context).width / 2, 53),
+          //     maximumSize: Size(MediaQuery.sizeOf(context).width / 2, 53),
+          //     padding: const EdgeInsets.symmetric(
+          //       horizontal: 24,
+          //       vertical: 12,
+          //     ),
+          //     backgroundColor: _getButtonColor(context),
+          //   ),
+          // ),
         ],
       ),
     );

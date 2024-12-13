@@ -243,7 +243,7 @@ class _SplashScreenState extends State<SplashScreen> {
                   title: 'Todo App',
                   child: ConnectivityWrapper(child: TaskListScreen()),
                 )
-              : const TaskListScreen(),
+              : const ConnectivityWrapper(child: TaskListScreen()),
           duration: AnimationConstants.navigationDuration,
         ),
       );

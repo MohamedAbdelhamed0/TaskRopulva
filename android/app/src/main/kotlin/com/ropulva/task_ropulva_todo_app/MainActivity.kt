@@ -1,4 +1,4 @@
-package com.ropulva.task_ropulva_todo_app
+package com.ropulva
 
 import io.flutter.embedding.android.FlutterActivity
 

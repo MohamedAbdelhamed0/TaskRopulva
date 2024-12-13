@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart'; // Import SystemChrome
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../core/services/responsive_helper.dart';
@@ -14,6 +15,26 @@ class TaskListScreen extends StatefulWidget {
 }
 
 class _TaskListScreenState extends State<TaskListScreen> {
+  @override
+  void initState() {
+    super.initState();
+    // Set the status bar color in initState
+    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent, // Replace with your desired color
+      statusBarIconBrightness: Brightness.dark, // Use dark for light status bar
+    ));
+  }
+
+  @override
+  void dispose() {
+    // Reset the status bar color when navigating away
+    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+      statusBarIconBrightness: Brightness.dark,
+    ));
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     bool isTouch = ResponsiveHelper.isTouch(context);
