@@ -42,8 +42,8 @@ import 'dart:async';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 
-import '../../core/services/ConsoleLogger.dart';
 import '../../core/services/connectivity_helper.dart';
+import '../../core/services/console_logger.dart';
 import '../../core/services/service_locator.dart';
 import '../data/models/task_model.dart';
 import '../data/repos/task_repository.dart';
@@ -59,7 +59,7 @@ class TaskBloc extends HydratedBloc<TaskEvent, TaskState> {
 
   // Add new fields for retry and throttling
   static const int maxRetryAttempts = 3;
-  final _throttle = Throttle(Duration(seconds: 2));
+  final _throttle = Throttle(const Duration(seconds: 2));
   final _cache = <String, TaskModel>{};
 
   TaskBloc() : super(TaskInitial()) {

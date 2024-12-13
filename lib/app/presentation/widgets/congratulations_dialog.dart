@@ -3,7 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:lottie/lottie.dart';
-import 'package:task_ropulva_todo_app/core/services/SoundService.dart';
+import 'package:task_ropulva_todo_app/core/services/sound_service.dart';
 import 'package:task_ropulva_todo_app/core/themes/colors.dart';
 
 class _DialogConstants {

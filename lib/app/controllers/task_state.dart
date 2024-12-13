@@ -30,6 +30,5 @@ class TaskError extends TaskState {
 
   TaskError(this.message, {required this.previousState});
 
-  @override
   List<Object?> get props => [message, previousState];
 }

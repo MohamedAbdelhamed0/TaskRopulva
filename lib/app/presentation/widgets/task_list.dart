@@ -4,8 +4,8 @@ import 'package:flutter_animate/flutter_animate.dart';
 import '../../../core/services/responsive_helper.dart';
 import '../../data/models/task_model.dart';
 import '../screens/task_list_screen.dart';
-import 'EmptyTaskList.dart';
-import 'TaskListItem2.dart';
+import 'empty_task_list.dart';
+import 'task_list_item2.dart';
 
 class TaskList extends StatelessWidget {
   final List<TaskModel> filteredTasks;

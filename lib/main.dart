@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:task_ropulva_todo_app/core/services/snackbar_service.dart';
+import 'package:task_ropulva_todo_app/app/data/repos/task_repository.dart';
 
 import 'app/controllers/task_bloc.dart';
 import 'app/data/data_sources/remote_data_source.dart';
@@ -26,11 +27,11 @@ Future<void> main() async {
     );
 
     await setupServiceLocator();
-    final remoteDataSource = getIt<RemoteDataSource>();
+    final taskRepository = getIt<TaskRepository>();
 
     // Will check cache before creating new anonymous user
-    if (remoteDataSource.currentUser == null) {
-      await remoteDataSource.signInAnonymously();
+    if (taskRepository.currentUser == null) {
+      await taskRepository.signInAnonymously();
     }
 
     await WindowHelper.initializeWindow();
@@ -55,7 +56,7 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         theme: AppTheme.lightTheme,
         home: StreamBuilder<User?>(
-          stream: getIt<RemoteDataSource>().authStateChanges,
+          stream: getIt<TaskRepository>().authStateChanges,
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const SplashScreen();
@@ -65,7 +66,7 @@ class MyApp extends StatelessWidget {
               return const SplashScreen();
             }
 
-            getIt<RemoteDataSource>().signInAnonymously();
+            getIt<TaskRepository>().signInAnonymously();
             return const SplashScreen();
           },
         ),

@@ -15,11 +15,15 @@ import '../data_sources/remote_data_source.dart';
 import '../models/task_model.dart';
 import 'task_repository.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import '../../../core/services/cache_helper.dart';
+import '../../../core/services/service_locator.dart';
 
 class TaskRepositoryImpl implements TaskRepository {
   final RemoteDataSource _remoteDataSource;
+  final CacheHelper _cacheHelper;
 
-  TaskRepositoryImpl(this._remoteDataSource);
+  TaskRepositoryImpl(this._remoteDataSource)
+      : _cacheHelper = getIt<CacheHelper>();
 
   @override
   User? get currentUser => _remoteDataSource.currentUser;
@@ -30,16 +34,29 @@ class TaskRepositoryImpl implements TaskRepository {
   @override
   Future<void> signInAnonymously() async {
     try {
-      await _remoteDataSource.signInAnonymously();
+      if (await _isUserCached()) return;
+
+      final credential = await _remoteDataSource.signInAnonymously();
+      final user = credential.user;
+      if (user != null) {
+        await _cacheHelper.saveUserId(user.uid);
+      }
     } catch (e) {
       rethrow;
     }
   }
 
+  Future<bool> _isUserCached() async {
+    return _cacheHelper.getUserId() != null;
+  }
+
   @override
   Future<void> signOut() async {
     try {
-      await _remoteDataSource.signOut();
+      await Future.wait([
+        _remoteDataSource.signOut(),
+        _cacheHelper.clearUser(),
+      ]);
     } catch (e) {
       rethrow;
     }

@@ -162,7 +162,7 @@ Future<void> _selectDateTime(BuildContext context, _TaskDialogData data) async {
 
     if (time != null && context.mounted) {
       if (context is StatefulElement) {
-        (context.state as State).setState(() {
+        (context.state).setState(() {
           data.selectedDate = DateTime(
             date.year,
             date.month,

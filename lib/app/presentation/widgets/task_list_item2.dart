@@ -9,8 +9,8 @@ import '../../../core/themes/colors.dart';
 import '../../../core/utils/date_formatter.dart';
 import '../../controllers/task_bloc.dart';
 import '../../data/models/task_model.dart';
-import 'CongratulationsDialog.dart';
-import 'showTaskDialog.dart';
+import 'congratulations_dialog.dart';
+import 'show_task_dialog.dart';
 
 class TaskListItem2 extends StatefulWidget {
   final TaskModel task;

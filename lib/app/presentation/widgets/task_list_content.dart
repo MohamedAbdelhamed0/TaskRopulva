@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:task_ropulva_todo_app/app/presentation/widgets/showTaskDialog.dart';
+import 'package:task_ropulva_todo_app/app/presentation/widgets/show_task_dialog.dart';
 
 import '../../../core/services/responsive_helper.dart';
 import '../../controllers/task_bloc.dart';
 import '../../data/models/task_model.dart';
 import '../screens/task_list_screen.dart';
-import 'FilterChips.dart';
-import 'HeaderSection.dart';
-import 'TaskList.dart';
 import 'add_buttom_windos.dart';
+import 'filter_chips.dart';
+import 'header_section.dart';
+import 'task_list.dart';
 
 class TaskListContent extends StatelessWidget {
   final TasksLoaded state;

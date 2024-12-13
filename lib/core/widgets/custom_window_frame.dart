@@ -4,7 +4,7 @@ import 'package:task_ropulva_todo_app/core/widgets/connectivity_status_icon.dart
 import 'package:window_manager/window_manager.dart';
 
 import '../themes/colors.dart';
-import 'ExitConfirmationDialog.dart';
+import 'exit_confirmation_dialog.dart';
 
 class CustomWindowFrame extends StatelessWidget {
   final Widget child;
